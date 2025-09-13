@@ -1,7 +1,7 @@
 @use "../styles/variables" as *;
 
 .footer {
-  background: $color-blue;
+  background: $blue;
   border-top: 1px solid rgba(0,0,0,.06);
   padding: 14px 0;
 
@@ -37,7 +37,7 @@
   }
 
   &__badge {
-    background: $color-blue;
+    background: $blue;
     color: #fff;
     padding: 0 14px;
     height: 38px;
@@ -50,10 +50,9 @@
 }
 
 /* на маленьких экранах — в столбик */
-@media (max-width: 640px) {
+@media (max-width: 360px) {
   .footer__inner {
-    flex-wrap: wrap;
-    gap: 8px 12px;
+    flex-direction: column;   
+    gap: 12px;
   }
-  .footer__spacer { display: none; }
 }

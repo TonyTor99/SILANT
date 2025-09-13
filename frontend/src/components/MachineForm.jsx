@@ -52,7 +52,6 @@ export default function MachineForm({
 
   function onSubmitForm(e) {
     e.preventDefault();
-    // серийник у тебя CharField — не стираем ведущие нули!
     onSubmit(f);
   }
 

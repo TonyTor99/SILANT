@@ -65,38 +65,52 @@ export default function Main() {
 
         {/* Таблица */}
         {results.length > 0 && (
-          <table className="results-table">
-            <thead>
-              <tr>
-                <th>Зав. № машины</th>
-                <th>Модель техники</th>
-                <th>Модель двигателя</th>
-                <th>Зав. № двигателя</th>
-                <th>Модель трансмиссии</th>
-                <th>Зав. № трансмиссии</th>
-                <th>Модель ведущего моста</th>
-                <th>Зав. № ведущего моста</th>
-                <th>Модель управляемого моста</th>
-                <th>Зав. № управляемого моста</th>
-              </tr>
-            </thead>
-            <tbody>
-              {results.map((m) => (
-                <tr key={m.id}>
-                  <td>{m.serial_number}</td>
-                  <td>{m.model_name}</td>
-                  <td>{m.engine_model}</td>
-                  <td>{m.engine_serial}</td>
-                  <td>{m.transmission_model}</td>
-                  <td>{m.transmission_serial}</td>
-                  <td>{m.drive_axle_model}</td>
-                  <td>{m.drive_axle_serial}</td>
-                  <td>{m.steer_axle_model}</td>
-                  <td>{m.steer_axle_serial}</td>
+          <div className="table-wrap">
+            <table className="results-table">
+              <thead>
+                <tr>
+                  <th>Зав. № машины</th>
+                  <th>Модель техники</th>
+                  <th>Модель двигателя</th>
+                  <th>Зав. № двигателя</th>
+                  <th>Модель трансмиссии</th>
+                  <th>Зав. № трансмиссии</th>
+                  <th>Модель ведущего моста</th>
+                  <th>Зав. № ведущего моста</th>
+                  <th>Модель управляемого моста</th>
+                  <th>Зав. № управляемого моста</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {results.map((m) => (
+                  <tr key={m.id}>
+                    <td data-label="Зав. № машины">{m.serial_number}</td>
+                    <td data-label="Модель техники">{m.model_name}</td>
+                    <td data-label="Модель двигателя">{m.engine_model}</td>
+                    <td data-label="Зав. № двигателя">{m.engine_serial}</td>
+                    <td data-label="Модель трансмиссии">
+                      {m.transmission_model}
+                    </td>
+                    <td data-label="Зав. № трансмиссии">
+                      {m.transmission_serial}
+                    </td>
+                    <td data-label="Модель ведущего моста">
+                      {m.drive_axle_model}
+                    </td>
+                    <td data-label="Зав. № ведущего моста">
+                      {m.drive_axle_serial}
+                    </td>
+                    <td data-label="Модель управляемого моста">
+                      {m.steer_axle_model}
+                    </td>
+                    <td data-label="Зав. № управляемого моста">
+                      {m.steer_axle_serial}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
 
         {!loading && !error && nonResults && (

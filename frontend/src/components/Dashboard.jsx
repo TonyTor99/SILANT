@@ -69,7 +69,6 @@ export default function Dashboard({ user }) {
   const navigate = useNavigate();
   const query = useQuery();
 
-
   useEffect(() => {
     if (tab === "machines") {
       authFetch("/api/machines/facets/")
@@ -94,7 +93,6 @@ export default function Dashboard({ user }) {
 
     (async () => {
       try {
-        // 1) машины: возьмём страницу без фильтров (у тебя API отдаёт только разрешённые по роли)
         const r1 = await authFetch("/api/machines/?ordering=serial_number");
         const d1 = await r1.json();
         const ms = (Array.isArray(d1) ? d1 : d1.results || []).map((m) => ({
@@ -104,7 +102,6 @@ export default function Dashboard({ user }) {
         }));
         setMachinesForSelect(ms);
 
-        // 2) виды ТО: из facets maintenance_type (у тебя уже есть)
         const r2 = await authFetch("/api/maintenance/facets/");
         const d2 = await r2.json();
         const types = (d2.maintenance_type || []).map(([value, label]) => ({
@@ -370,82 +367,99 @@ export default function Dashboard({ user }) {
             </div>
           )}
           <FilterBar fields={machineFilterFields} collapsedByDefault />
-          <table className="tbl">
-            <thead>
-              <tr>
-                <th>Зав. №</th>
-                <th>Модель</th>
-                <th>Двигатель</th>
-                <th>Дата отгрузки</th>
-                <th>Сервисная организация</th>
-                {canEditMachines && <th>Действия</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((m) => (
-                <tr key={m.id} style={{ cursor: "pointer" }}>
-                  <td onClick={() => navigate(`/machines/${m.id}`)}>
-                    {m.serial_number}
-                  </td>
-                  <td onClick={() => navigate(`/machines/${m.id}`)}>
-                    {m.model_name}
-                  </td>
-                  <td onClick={() => navigate(`/machines/${m.id}`)}>
-                    {m.engine_model}
-                  </td>
-                  <td onClick={() => navigate(`/machines/${m.id}`)}>
-                    {m.shipment_date}
-                  </td>
-                  <td onClick={() => navigate(`/machines/${m.id}`)}>
-                    {m.service_company}
-                  </td>
-                  {canEditMachines && (
-                    <td style={{ whiteSpace: "nowrap" }}>
-                      <button
-                        onClick={async (e) => {
-                          e.stopPropagation();
-                          try {
-                            setMachineLoading(true);
-                            const full = await getMachine(m.id);
-                            setEditingMachine(full);
-                            setOpenMachine(true);
-                          } catch (err) {
-                            alert(err.message || err);
-                          } finally {
-                            setMachineLoading(false);
-                          }
-                        }}
-                      >
-                        ✎
-                      </button>
-                      <button
-                        onClick={async () => {
-                          if (
-                            !confirm(
-                              "Удалить машину? Это удалит и её ТО/рекламации."
-                            )
-                          )
-                            return;
-                          try {
-                            await deleteMachine(m.id);
-                            const r = await authFetch(
-                              "/api/machines/?ordering=-shipment_date"
-                            );
-                            const d = await r.json();
-                            setRows(Array.isArray(d) ? d : d.results || []);
-                          } catch (e) {
-                            alert(e.message || e);
-                          }
-                        }}
-                      >
-                        🗑
-                      </button>
-                    </td>
-                  )}
+          <div className="table-wrap">
+            <table className="tbl">
+              <thead>
+                <tr>
+                  <th>Зав. №</th>
+                  <th>Модель</th>
+                  <th>Двигатель</th>
+                  <th>Дата отгрузки</th>
+                  <th>Сервисная организация</th>
+                  {canEditMachines && <th>Действия</th>}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((m) => (
+                  <tr key={m.id} style={{ cursor: "pointer" }}>
+                    <td
+                      data-label="Зав. №"
+                      onClick={() => navigate(`/machines/${m.id}`)}
+                    >
+                      {m.serial_number}
+                    </td>
+                    <td
+                      data-label="Модель"
+                      onClick={() => navigate(`/machines/${m.id}`)}
+                    >
+                      {m.model_name}
+                    </td>
+                    <td
+                      data-label="Двигатель"
+                      onClick={() => navigate(`/machines/${m.id}`)}
+                    >
+                      {m.engine_model}
+                    </td>
+                    <td
+                      data-label="Дата отгрузки"
+                      onClick={() => navigate(`/machines/${m.id}`)}
+                    >
+                      {m.shipment_date}
+                    </td>
+                    <td
+                      data-label="Сервисная организация"
+                      onClick={() => navigate(`/machines/${m.id}`)}
+                    >
+                      {m.service_company}
+                    </td>
+                    {canEditMachines && (
+                      <td className="actions" data-label="Действия">
+                        <button
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            try {
+                              setMachineLoading(true);
+                              const full = await getMachine(m.id);
+                              setEditingMachine(full);
+                              setOpenMachine(true);
+                            } catch (err) {
+                              alert(err.message || err);
+                            } finally {
+                              setMachineLoading(false);
+                            }
+                          }}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          onClick={async () => {
+                            if (
+                              !confirm(
+                                "Удалить машину? Это удалит и её ТО/рекламации."
+                              )
+                            )
+                              return;
+                            try {
+                              await deleteMachine(m.id);
+                              const r = await authFetch(
+                                "/api/machines/?ordering=-shipment_date"
+                              );
+                              const d = await r.json();
+                              setRows(Array.isArray(d) ? d : d.results || []);
+                            } catch (e) {
+                              alert(e.message || e);
+                            }
+                          }}
+                        >
+                          🗑
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
       )}
 
@@ -501,58 +515,62 @@ export default function Dashboard({ user }) {
               }}
             />
           </Modal>
-          <table className="tbl">
-            <thead>
-              <tr>
-                <th>Зав. №</th>
-                <th>Вид ТО</th>
-                <th>Дата</th>
-                <th>Наработка</th>
-                <th>Кем проводилось</th>
-                {canEditMaint && <th>Действия</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((x) => (
-                <tr key={x.id}>
-                  <td>{x.machine_serial}</td>
-                  <td>{x.maintenance_type?.name ?? x.maintenance_type}</td>
-                  <td>{x.date}</td>
-                  <td>{x.operating_hours}</td>
-                  <td>{x.service_company}</td>
-                  {canEditMaint && (
-                    <td style={{ whiteSpace: "nowrap" }}>
-                      <button
-                        onClick={() => {
-                          setEditingMaint(x);
-                          setOpenMaint(true);
-                        }}
-                      >
-                        ✎
-                      </button>
-                      <button
-                        onClick={async () => {
-                          if (!confirm("Удалить запись ТО?")) return;
-                          try {
-                            await deleteMaintenance(x.id);
-                            const r = await authFetch(
-                              "/api/maintenance/?ordering=machine__serial_number,-date"
-                            );
-                            const d = await r.json();
-                            setRows(Array.isArray(d) ? d : d.results || []);
-                          } catch (e) {
-                            alert(e.message || e);
-                          }
-                        }}
-                      >
-                        🗑
-                      </button>
-                    </td>
-                  )}
+          <div className="table-wrap">
+            <table className="tbl">
+              <thead>
+                <tr>
+                  <th>Зав. №</th>
+                  <th>Вид ТО</th>
+                  <th>Дата</th>
+                  <th>Наработка</th>
+                  <th>Кем проводилось</th>
+                  {canEditMaint && <th>Действия</th>}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((x) => (
+                  <tr key={x.id}>
+                    <td data-label="Зав. №">{x.machine_serial}</td>
+                    <td data-label="Вид ТО">
+                      {x.maintenance_type?.name ?? x.maintenance_type}
+                    </td>
+                    <td data-label="Дата">{x.date}</td>
+                    <td data-label="Наработка">{x.operating_hours}</td>
+                    <td data-label="Кем проводилось">{x.service_company}</td>
+                    {canEditMaint && (
+                      <td className="actions" data-label="Действия">
+                        <button
+                          onClick={() => {
+                            setEditingMaint(x);
+                            setOpenMaint(true);
+                          }}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          onClick={async () => {
+                            if (!confirm("Удалить запись ТО?")) return;
+                            try {
+                              await deleteMaintenance(x.id);
+                              const r = await authFetch(
+                                "/api/maintenance/?ordering=machine__serial_number,-date"
+                              );
+                              const d = await r.json();
+                              setRows(Array.isArray(d) ? d : d.results || []);
+                            } catch (e) {
+                              alert(e.message || e);
+                            }
+                          }}
+                        >
+                          🗑
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
       )}
 
@@ -608,60 +626,62 @@ export default function Dashboard({ user }) {
               </button>
             </div>
           )}
-          <table className="tbl">
-            <thead>
-              <tr>
-                <th>Зав. №</th>
-                <th>Дата отказа</th>
-                <th>Узел отказа</th>
-                <th>Описание</th>
-                <th>Восстановлено</th>
-                <th>Простой (ч)</th>
-                {canEditClaims && <th>Действия</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((c) => (
-                <tr key={c.id}>
-                  <td>{c.machine_serial}</td>
-                  <td>{c.failure_date}</td>
-                  <td>{c.failure_node}</td>
-                  <td>{c.failure_description}</td>
-                  <td>{c.restored_date}</td>
-                  <td>{c.downtime_hours}</td>
-                  {canEditClaims && (
-                    <td style={{ whiteSpace: "nowrap" }}>
-                      <button
-                        onClick={() => {
-                          setEditingClaim(c);
-                          setOpenClaim(true);
-                        }}
-                      >
-                        ✎
-                      </button>
-                      <button
-                        onClick={async () => {
-                          if (!confirm("Удалить рекламацию?")) return;
-                          try {
-                            await deleteClaim(c.id);
-                            const r = await authFetch(
-                              "/api/claims/?ordering=machine__serial_number,-failure_date"
-                            );
-                            const d = await r.json();
-                            setRows(Array.isArray(d) ? d : d.results || []);
-                          } catch (e) {
-                            alert(e.message || e);
-                          }
-                        }}
-                      >
-                        🗑
-                      </button>
-                    </td>
-                  )}
+          <div className="table-wrap">
+            <table className="tbl">
+              <thead>
+                <tr>
+                  <th>Зав. №</th>
+                  <th>Дата отказа</th>
+                  <th>Узел отказа</th>
+                  <th>Описание</th>
+                  <th>Восстановлено</th>
+                  <th>Простой (ч)</th>
+                  {canEditClaims && <th>Действия</th>}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((c) => (
+                  <tr key={c.id}>
+                    <td data-label="Зав. №">{c.machine_serial}</td>
+                    <td data-label="Дата отказа">{c.failure_date}</td>
+                    <td data-label="Узел отказа">{c.failure_node}</td>
+                    <td data-label="Описание">{c.failure_description}</td>
+                    <td data-label="Восстановлено">{c.restored_date}</td>
+                    <td data-label="Простой (ч)">{c.downtime_hours}</td>
+                    {canEditClaims && (
+                      <td className="actions" data-label="Действия">
+                        <button
+                          onClick={() => {
+                            setEditingClaim(c);
+                            setOpenClaim(true);
+                          }}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          onClick={async () => {
+                            if (!confirm("Удалить рекламацию?")) return;
+                            try {
+                              await deleteClaim(c.id);
+                              const r = await authFetch(
+                                "/api/claims/?ordering=machine__serial_number,-failure_date"
+                              );
+                              const d = await r.json();
+                              setRows(Array.isArray(d) ? d : d.results || []);
+                            } catch (e) {
+                              alert(e.message || e);
+                            }
+                          }}
+                        >
+                          🗑
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
       )}
     </main>

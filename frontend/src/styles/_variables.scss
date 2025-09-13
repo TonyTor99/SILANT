@@ -1,4 +1,28 @@
-$color-blue: #163E6C;
-$color-red: #D20A11;
-$color-beige: #EBE6D6;
-$text-color: #1B1F23;
+$blue: #163e6c;
+$red: #d20a11;
+$beige: #ebe6d6;
+$text-color: #1b1f23;
+
+$container-max: 1200px;
+$container-pad: 16px;
+
+$breakpoints: (
+  xs: 360px,
+  sm: 640px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+  xxl: 1440px,
+  qhd: 1536px,
+  uhd: 1920px,
+);
+
+@mixin respond($name) {
+  $value: map-get($breakpoints, $name);
+  @if $value == null {
+    @error "Unknown breakpoint: #{$name}";
+  }
+  @media (min-width: $value) {
+    @content;
+  }
+}

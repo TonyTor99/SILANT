@@ -2,39 +2,36 @@
 
 .machine {
   padding: 24px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
+
 .machine__head {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  gap: 16px;
   margin-bottom: 16px;
 }
+
 .btn-back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 44px;
   padding: 0 18px;
   border-radius: 8px;
   border: 1px solid transparent;
-  background: $color-red;
+  background: #D20A11;
   color: #fff;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-
-  &:hover {
-    filter: brightness(0.95);
-  }
-  &:active {
-    transform: translateY(1px);
-  }
-}
-.muted {
-  color: rgba(#000, 0.6);
 }
 
+
+/* карточки */
 .card {
   background: #fff;
   border-radius: 12px;
@@ -42,10 +39,13 @@
   box-shadow: 0 2px 6px rgba(#000, 0.06);
   margin-bottom: 16px;
 }
+
+/* сетка ТТХ */
 .specs {
   display: grid;
   grid-template-columns: repeat(2, minmax(260px, 1fr));
   gap: 10px 24px;
+
   > div {
     display: grid;
     grid-template-columns: 180px 1fr;
@@ -58,27 +58,114 @@
     font-weight: 600;
   }
 }
-.pre {
-  white-space: pre-wrap;
-  background: rgba($color-blue, 0.04);
-  padding: 10px;
-  border-radius: 8px;
-}
 
+/* таблицы */
 .tbl {
   width: 100%;
   border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid rgba(#000, 0.15);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+    font-size: 14px;
+  }
+  th {
+    background: $blue;
+    color: #fff;
+  }
+  tbody tr:nth-child(even) td {
+    background: rgba($blue, 0.03);
+  }
 }
-.tbl th,
-.tbl td {
-  border: 1px solid rgba(#000, 0.15);
-  padding: 8px 10px;
-  text-align: left;
+
+/* ====== адаптив ====== */
+
+/* до 1024 — сетка ТТХ поуже */
+@media (max-width: 1024px) {
+  .specs {
+    grid-template-columns: 1fr 1fr;
+    > div {
+      grid-template-columns: 160px 1fr;
+    }
+  }
 }
-.tbl th {
-  background: $color-blue;
-  color: #fff;
+
+/* до 768 — шапка и ТТХ в одну колонку, кнопка назад на всю ширину */
+@media (max-width: 768px) {
+  .machine__head {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .btn-back {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .specs {
+    grid-template-columns: 1fr;
+    > div {
+      grid-template-columns: 150px 1fr;
+    }
+  }
 }
-.tbl tbody tr:nth-child(even) td {
-  background: rgba($color-blue, 0.03);
+
+/* до 640 — превращаем таблицы в карточки с подписями слева */
+@media (max-width: 640px) {
+  .tbl {
+    thead {
+      display: none;
+    }
+    tbody {
+      display: block;
+    }
+    tbody tr {
+      display: block;
+      border: 1px solid rgba(#000, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      border-bottom: 1px solid rgba(#000, 0.06);
+      padding: 9px 12px;
+      font-size: 13px;
+    }
+    tbody tr td:last-child {
+      border-bottom: 0;
+    }
+
+    /* подпись берём из атрибута data-label */
+    tbody td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: rgba(#000, 0.85);
+      margin-right: 12px;
+      flex: 1 1 auto;
+      min-width: 42%;
+      white-space: pre-wrap;
+    }
+  }
+
+  /* ТТХ: метки сверху, значение ниже — легче читать в телефоне */
+  .specs > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+/* до 360 — чуть уменьшить типографику */
+@media (max-width: 360px) {
+  .tbl tbody td {
+    font-size: 12.5px;
+    padding: 8px 10px;
+  }
 }

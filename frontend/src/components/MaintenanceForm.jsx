@@ -1,27 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 
 export default function MaintenanceForm({
-  initial,            // объект из строки таблицы, может НЕ иметь id машины
-  machines,           // [{id, serial_number, model_name}, ...]
-  types,              // [{value:id, label:name}, ...]
+  initial,
+  machines, 
+  types, 
   submitting = false,
   onCancel,
-  onSubmit,           // (payload) => Promise
+  onSubmit,
 }) {
   // вычислим начальные значения
   const initialMachineId = useMemo(() => {
     if (!initial) return "";
-    // в таблице ТО у тебя было поле machine_serial — найдём по нему id
     const bySerial = machines.find(m => m.serial_number === initial.machine_serial);
     if (bySerial) return bySerial.id;
-    // если вдруг initial уже содержит machine (id) — используем его
     if (typeof initial.machine === "number") return initial.machine;
     return "";
   }, [initial, machines]);
 
   const initialTypeId = useMemo(() => {
     if (!initial) return "";
-    // в таблице у тебя либо объект {id, name}, либо просто id
     if (initial.maintenance_type && typeof initial.maintenance_type === "object") {
       return initial.maintenance_type.id;
     }
@@ -79,7 +76,7 @@ export default function MaintenanceForm({
         form.operating_hours === "" ? null : Number(form.operating_hours),
       order_number: form.order_number || "",
       order_date: form.order_date || null,
-      service_company: form.service_company || "", // может заполниться на бэке
+      service_company: form.service_company || "",
     };
 
     await onSubmit(payload);

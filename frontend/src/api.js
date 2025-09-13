@@ -75,7 +75,6 @@ export async function deleteMaintenance(id) {
 }
 
 export async function createClaim(form) {
-  // если форма хранит machine (а не machine_id) — конвертируем
   const payload = { ...form };
   if (payload.machine && !payload.machine_id) {
     payload.machine_id = payload.machine;

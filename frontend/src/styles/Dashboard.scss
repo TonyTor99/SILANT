@@ -2,15 +2,20 @@
 
 .dash {
   padding: 24px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
   .dash__head {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    gap: 16px;
     margin-bottom: 14px;
   }
+
   .who__title {
     font-weight: 700;
-    color: $color-blue;
+    color: $blue;
   }
   .who__name {
     font-weight: 600;
@@ -25,27 +30,34 @@
   .tabs {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
   }
   .tab-btn {
     padding: 8px 12px;
     border-radius: 8px;
-    border: 1px solid rgba($color-blue, 0.3);
+    border: 1px solid rgba($blue, 0.3);
     background: #fff;
     cursor: pointer;
     font-weight: 600;
-    color: $color-blue;
+    color: $blue;
     &.active {
-      background: $color-blue;
+      background: $blue;
       color: #fff;
     }
   }
 
+  /* таблица + скролл-обёртка */
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
   .tbl {
     width: 100%;
     border-collapse: collapse;
     background: #fff;
     border-radius: 8px;
     overflow: hidden;
+    min-width: 720px; /* защитимся на ноутбуках */
     th,
     td {
       border: 1px solid rgba(#000, 0.15);
@@ -54,14 +66,96 @@
       font-size: 14px;
     }
     th {
-      background: $color-blue;
+      background: $blue;
       color: #fff;
     }
     tbody tr:nth-child(even) td {
-      background: rgba($color-blue, 0.03);
+      background: rgba($blue, 0.03);
+    }
+    td.actions {
+      white-space: nowrap;
     }
   }
+
   .err {
-    color: $color-red;
+    color: $red;
+  }
+}
+
+/* ————— ноутбуки: чуть ужмём таблицы ————— */
+@media (max-width: 1024px) {
+  .dash .tbl th,
+  .dash .tbl td {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}
+
+/* ————— мобильные: карточки вместо таблицы ————— */
+@media (max-width: 640px) {
+  .dash {
+    padding: 16px 12px;
+  }
+
+  .dash .dash__head {
+    flex-direction: column;
+    align-items: stretch;
+    .tabs {
+      justify-content: flex-start;
+    }
+  }
+
+  .dash .tbl {
+    border: 0;
+    background: transparent;
+    min-width: 0; /* снять ограничение */
+    thead {
+      display: none;
+    }
+    tbody tr {
+      display: block;
+      margin: 12px 0;
+      background: #fff;
+      border: 1px solid rgba(#000, 0.12);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      border-bottom: 1px solid rgba(#000, 0.06);
+      padding: 10px 14px;
+      font-size: 14px;
+      &:last-child {
+        border-bottom: 0;
+      }
+      &::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: rgba(#000, 0.85);
+        margin-right: 12px;
+        text-align: left;
+        flex: 1 1 auto;
+      }
+    }
+    tbody td.actions {
+      justify-content: flex-end;
+      gap: 8px;
+    }
+  }
+}
+
+/* ————— совсем узкие (360px) ————— */
+@media (max-width: 360px) {
+  .dash .tab-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  .dash .tbl tbody td {
+    font-size: 13px;
+    padding: 9px 12px;
   }
 }

@@ -139,12 +139,14 @@ export default function MachinePage() {
           <tbody>
             {data.maintenance.map((x) => (
               <tr key={x.id}>
-                <td>{x.maintenance_type?.name ?? x.maintenance_type}</td>
-                <td>{x.date}</td>
-                <td>{x.operating_hours}</td>
-                <td>{x.order_number}</td>
-                <td>{x.order_date}</td>
-                <td>{x.service_company}</td>
+                <td data-label="Вид ТО">
+                  {x.maintenance_type?.name ?? x.maintenance_type}
+                </td>
+                <td data-label="Дата">{x.date}</td>
+                <td data-label="Наработка">{x.operating_hours}</td>
+                <td data-label="№ з/н">{x.order_number}</td>
+                <td data-label="Дата з/н">{x.order_date}</td>
+                <td data-label="Организация">{x.service_company}</td>
               </tr>
             ))}
             {data.maintenance.length === 0 && (
@@ -177,14 +179,14 @@ export default function MachinePage() {
           <tbody>
             {data.claims.map((c) => (
               <tr key={c.id}>
-                <td>{c.failure_date}</td>
-                <td>{c.operating_hours}</td>
-                <td>{c.failure_node}</td>
-                <td>{c.failure_description}</td>
-                <td>{c.recovery_method}</td>
-                <td>{c.used_spare}</td>
-                <td>{c.restored_date}</td>
-                <td>{c.downtime_hours}</td>
+                <td data-label="Дата отказа">{c.failure_date}</td>
+                <td data-label="Наработка">{c.operating_hours}</td>
+                <td data-label="Узел">{c.failure_node}</td>
+                <td data-label="Описание">{c.failure_description}</td>
+                <td data-label="Восстановление">{c.recovery_method}</td>
+                <td data-label="Запчасти">{c.used_spare}</td>
+                <td data-label="Дата восстановления">{c.restored_date}</td>
+                <td data-label="Простой (ч)">{c.downtime_hours}</td>
               </tr>
             ))}
             {data.claims.length === 0 && (
