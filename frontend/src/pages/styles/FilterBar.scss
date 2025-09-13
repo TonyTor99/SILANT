@@ -1,0 +1,41 @@
+.filterbar {
+  margin-bottom: 12px;
+}
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+.filter-item label {
+  display: block;
+  font-size: 0.9rem;
+  color: rgba(#000, 0.6);
+  margin-bottom: 4px;
+}
+.filter-item input {
+  width: 80%;
+  padding: 0 12px 0 12px;
+  border: 1px solid rgba(27, 31, 35, 0.25);
+  border-radius: 8px;
+  background: #fff;
+  color: #1b1f23;
+  font-size: 16px;
+  outline: none;
+}
+.filter-actions {
+  display: flex;
+  gap: 8px;
+}
+.filter-chips {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  background: #ebe6d6;
+  border-radius: 999px;
+  padding: 4px 10px;
+  cursor: pointer;
+}

@@ -1,0 +1,59 @@
+@use "../styles/variables" as *;
+
+.footer {
+  background: $color-blue;
+  border-top: 1px solid rgba(0,0,0,.06);
+  padding: 14px 0;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__spacer { flex: 1; }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 210px;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 8px;
+    background: white;
+    color: $text-color;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 1px 0 rgba(0,0,0,.06) inset;
+
+    &:hover { outline: 2px solid rgba(22,62,108,.15); }
+  }
+
+  &__tg {
+    min-width: auto;
+    width: 38px; height: 38px; padding: 8px;
+    img { width: 100%; height: 100%; display: block; }
+  }
+
+  &__badge {
+    background: $color-blue;
+    color: #fff;
+    padding: 0 14px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 8px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+/* на маленьких экранах — в столбик */
+@media (max-width: 640px) {
+  .footer__inner {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+  .footer__spacer { display: none; }
+}

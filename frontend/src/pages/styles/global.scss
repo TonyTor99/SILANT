@@ -1,0 +1,24 @@
+@use "./fonts";
+@use "./variables" as *;
+
+body {
+  margin: 0;
+  font-family: "Astra", Arial, sans-serif;
+  background-color: $color-beige;
+  color: $text-color;
+  max-width: 1440px;
+  margin: auto;
+}
+
+html, body, #root, .app {
+  height: 100%;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}

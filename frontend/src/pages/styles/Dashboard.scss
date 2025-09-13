@@ -1,0 +1,67 @@
+@use "../styles/variables" as *;
+
+.dash {
+  padding: 24px 20px;
+  .dash__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 14px;
+  }
+  .who__title {
+    font-weight: 700;
+    color: $color-blue;
+  }
+  .who__name {
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .who__hint {
+    color: rgba(#000, 0.6);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+  }
+  .tab-btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba($color-blue, 0.3);
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    color: $color-blue;
+    &.active {
+      background: $color-blue;
+      color: #fff;
+    }
+  }
+
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    th,
+    td {
+      border: 1px solid rgba(#000, 0.15);
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background: $color-blue;
+      color: #fff;
+    }
+    tbody tr:nth-child(even) td {
+      background: rgba($color-blue, 0.03);
+    }
+  }
+  .err {
+    color: $color-red;
+  }
+}

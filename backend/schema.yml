@@ -1,0 +1,1064 @@
+openapi: 3.0.3
+info:
+  title: SILANT API
+  version: 1.0.0
+paths:
+  /api/auth/token/:
+    post:
+      operationId: auth_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/token/verify/:
+    post:
+      operationId: auth_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+  /api/claims/:
+    get:
+      operationId: claims_list
+      parameters:
+      - in: query
+        name: failure_node
+        schema:
+          type: string
+      - in: query
+        name: failure_node__icontains
+        schema:
+          type: string
+      - in: query
+        name: machine__serial_number
+        schema:
+          type: string
+      - in: query
+        name: machine__service_company
+        schema:
+          type: string
+      - in: query
+        name: machine__service_company__icontains
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: recovery_method__icontains
+        schema:
+          type: string
+      tags:
+      - claims
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClaimList'
+          description: ''
+  /api/claims/{id}/:
+    get:
+      operationId: claims_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Рекламация.
+        required: true
+      tags:
+      - claims
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+          description: ''
+  /api/claims/facets/:
+    get:
+      operationId: claims_facets_retrieve
+      tags:
+      - claims
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+          description: ''
+  /api/health:
+    get:
+      operationId: health_retrieve
+      tags:
+      - health
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/machines/:
+    get:
+      operationId: machines_list
+      description: |-
+        /api/machines        -> список (с пагинацией/поиском/сортировкой)
+        /api/machines/{id}   -> детальная карточка (с вложенными ТО и рекламациями)
+      parameters:
+      - in: query
+        name: drive_axle_model
+        schema:
+          type: string
+      - in: query
+        name: drive_axle_model__icontains
+        schema:
+          type: string
+      - in: query
+        name: engine_model
+        schema:
+          type: string
+      - in: query
+        name: engine_model__icontains
+        schema:
+          type: string
+      - in: query
+        name: model_name
+        schema:
+          type: string
+      - in: query
+        name: model_name__icontains
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: serial_number
+        schema:
+          type: string
+      - in: query
+        name: serial_number__icontains
+        schema:
+          type: string
+      - in: query
+        name: steer_axle_model
+        schema:
+          type: string
+      - in: query
+        name: steer_axle_model__icontains
+        schema:
+          type: string
+      - in: query
+        name: transmission_model
+        schema:
+          type: string
+      - in: query
+        name: transmission_model__icontains
+        schema:
+          type: string
+      tags:
+      - machines
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMachineAnonList'
+          description: ''
+    post:
+      operationId: machines_create
+      description: |-
+        /api/machines        -> список (с пагинацией/поиском/сортировкой)
+        /api/machines/{id}   -> детальная карточка (с вложенными ТО и рекламациями)
+      tags:
+      - machines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MachineAnon'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MachineAnon'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MachineAnon'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineAnon'
+          description: ''
+  /api/machines/{id}/:
+    get:
+      operationId: machines_retrieve
+      description: |-
+        /api/machines        -> список (с пагинацией/поиском/сортировкой)
+        /api/machines/{id}   -> детальная карточка (с вложенными ТО и рекламациями)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Машина.
+        required: true
+      tags:
+      - machines
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineAnon'
+          description: ''
+    put:
+      operationId: machines_update
+      description: |-
+        /api/machines        -> список (с пагинацией/поиском/сортировкой)
+        /api/machines/{id}   -> детальная карточка (с вложенными ТО и рекламациями)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Машина.
+        required: true
+      tags:
+      - machines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MachineAnon'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MachineAnon'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MachineAnon'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineAnon'
+          description: ''
+    patch:
+      operationId: machines_partial_update
+      description: |-
+        /api/machines        -> список (с пагинацией/поиском/сортировкой)
+        /api/machines/{id}   -> детальная карточка (с вложенными ТО и рекламациями)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Машина.
+        required: true
+      tags:
+      - machines
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMachineAnon'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMachineAnon'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMachineAnon'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineAnon'
+          description: ''
+    delete:
+      operationId: machines_destroy
+      description: |-
+        /api/machines        -> список (с пагинацией/поиском/сортировкой)
+        /api/machines/{id}   -> детальная карточка (с вложенными ТО и рекламациями)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Машина.
+        required: true
+      tags:
+      - machines
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/machines/facets/:
+    get:
+      operationId: machines_facets_retrieve
+      description: |-
+        /api/machines        -> список (с пагинацией/поиском/сортировкой)
+        /api/machines/{id}   -> детальная карточка (с вложенными ТО и рекламациями)
+      tags:
+      - machines
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineAnon'
+          description: ''
+  /api/maintenance/:
+    get:
+      operationId: maintenance_list
+      description: |-
+        /api/maintenance — список ТО (read-only)
+        Фильтры: по виду ТО, сервисной компании, серийному номеру машины и датам.
+      parameters:
+      - in: query
+        name: machine__serial_number
+        schema:
+          type: string
+      - in: query
+        name: maintenance_type
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: service_company
+        schema:
+          type: string
+      - in: query
+        name: service_company__icontains
+        schema:
+          type: string
+      tags:
+      - maintenance
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMaintenanceList'
+          description: ''
+  /api/maintenance-types/:
+    get:
+      operationId: maintenance_types_list
+      description: /api/maintenance-types -> список справочника видов ТО
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - maintenance-types
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMaintenanceTypeList'
+          description: ''
+  /api/maintenance-types/{id}/:
+    get:
+      operationId: maintenance_types_retrieve
+      description: /api/maintenance-types -> список справочника видов ТО
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Вид ТО.
+        required: true
+      tags:
+      - maintenance-types
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceType'
+          description: ''
+  /api/maintenance/{id}/:
+    get:
+      operationId: maintenance_retrieve
+      description: |-
+        /api/maintenance — список ТО (read-only)
+        Фильтры: по виду ТО, сервисной компании, серийному номеру машины и датам.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this ТО.
+        required: true
+      tags:
+      - maintenance
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenance'
+          description: ''
+  /api/maintenance/facets/:
+    get:
+      operationId: maintenance_facets_retrieve
+      description: |-
+        /api/maintenance — список ТО (read-only)
+        Фильтры: по виду ТО, сервисной компании, серийному номеру машины и датам.
+      tags:
+      - maintenance
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenance'
+          description: ''
+  /api/me/:
+    get:
+      operationId: me_retrieve
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - en
+          - ru
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/search:
+    get:
+      operationId: search_list
+      description: |-
+        GET /api/search?q=...
+        Возвращает список машин (MachineListSerializer) по запросу q.
+      summary: Поиск машин
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: q
+        schema:
+          type: string
+        description: 'Строка поиска: серийный номер (только цифры) или часть текста
+          (модель, двигатель, покупатель и т.п.)'
+        required: true
+      tags:
+      - search
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMachineListList'
+          description: ''
+components:
+  schemas:
+    Claim:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        machine_serial:
+          type: string
+          readOnly: true
+        failure_date:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата отказа
+        operating_hours:
+          type: integer
+          readOnly: true
+          nullable: true
+          title: Наработка, м/час
+        failure_node:
+          type: string
+          readOnly: true
+          title: Узел отказа
+        failure_description:
+          type: string
+          readOnly: true
+          title: Описание отказа
+        recovery_method:
+          type: string
+          readOnly: true
+          title: Способ восстановления
+        used_spare:
+          type: string
+          readOnly: true
+          nullable: true
+          title: Использованные запчасти
+        restored_date:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата восстановления
+        downtime_hours:
+          type: integer
+          readOnly: true
+          nullable: true
+          title: Время простоя (часов)
+      required:
+      - downtime_hours
+      - failure_date
+      - failure_description
+      - failure_node
+      - id
+      - machine_serial
+      - operating_hours
+      - recovery_method
+      - restored_date
+      - used_spare
+    MachineAnon:
+      type: object
+      properties:
+        serial_number:
+          type: string
+          readOnly: true
+          title: Зав. № машины
+        model_name:
+          type: string
+          readOnly: true
+          title: Модель техники
+        engine_model:
+          type: string
+          readOnly: true
+          title: Модель двигателя
+        engine_serial:
+          type: string
+          readOnly: true
+          title: Зав. № двигателя
+        transmission_model:
+          type: string
+          readOnly: true
+          title: Модель трансмиссии
+        transmission_serial:
+          type: string
+          readOnly: true
+          title: Зав. № трансмиссии
+        drive_axle_model:
+          type: string
+          readOnly: true
+          title: Модель ведущего моста
+        drive_axle_serial:
+          type: string
+          readOnly: true
+          title: Зав. № ведущего моста
+        steer_axle_model:
+          type: string
+          readOnly: true
+          title: Модель управляемого моста
+        steer_axle_serial:
+          type: string
+          readOnly: true
+          title: Зав. № управляемого моста
+      required:
+      - drive_axle_model
+      - drive_axle_serial
+      - engine_model
+      - engine_serial
+      - model_name
+      - serial_number
+      - steer_axle_model
+      - steer_axle_serial
+      - transmission_model
+      - transmission_serial
+    MachineList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        serial_number:
+          type: string
+          readOnly: true
+          title: Зав. № машины
+        model_name:
+          type: string
+          readOnly: true
+          title: Модель техники
+        engine_model:
+          type: string
+          readOnly: true
+          title: Модель двигателя
+        shipment_date:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата отгрузки с завода
+        service_company:
+          type: string
+          readOnly: true
+          title: Сервисная компания
+        maintenance_count:
+          type: string
+          readOnly: true
+        claims_count:
+          type: string
+          readOnly: true
+      required:
+      - claims_count
+      - engine_model
+      - id
+      - maintenance_count
+      - model_name
+      - serial_number
+      - service_company
+      - shipment_date
+    Maintenance:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        machine_serial:
+          type: string
+          readOnly: true
+        maintenance_type:
+          allOf:
+          - $ref: '#/components/schemas/MaintenanceType'
+          readOnly: true
+        date:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата проведения ТО
+        operating_hours:
+          type: integer
+          readOnly: true
+          nullable: true
+          title: Наработка, м/час
+        order_number:
+          type: string
+          readOnly: true
+          title: № заказ-наряда
+        order_date:
+          type: string
+          format: date
+          readOnly: true
+          nullable: true
+          title: Дата заказ-наряда
+        service_company:
+          type: string
+          readOnly: true
+          title: Организация, проводившая ТО
+      required:
+      - date
+      - id
+      - machine_serial
+      - maintenance_type
+      - operating_hours
+      - order_date
+      - order_number
+      - service_company
+    MaintenanceType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Вид ТО
+          maxLength: 100
+      required:
+      - id
+      - name
+    PaginatedClaimList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Claim'
+    PaginatedMachineAnonList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MachineAnon'
+    PaginatedMachineListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MachineList'
+    PaginatedMaintenanceList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Maintenance'
+    PaginatedMaintenanceTypeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaintenanceType'
+    PatchedMachineAnon:
+      type: object
+      properties:
+        serial_number:
+          type: string
+          readOnly: true
+          title: Зав. № машины
+        model_name:
+          type: string
+          readOnly: true
+          title: Модель техники
+        engine_model:
+          type: string
+          readOnly: true
+          title: Модель двигателя
+        engine_serial:
+          type: string
+          readOnly: true
+          title: Зав. № двигателя
+        transmission_model:
+          type: string
+          readOnly: true
+          title: Модель трансмиссии
+        transmission_serial:
+          type: string
+          readOnly: true
+          title: Зав. № трансмиссии
+        drive_axle_model:
+          type: string
+          readOnly: true
+          title: Модель ведущего моста
+        drive_axle_serial:
+          type: string
+          readOnly: true
+          title: Зав. № ведущего моста
+        steer_axle_model:
+          type: string
+          readOnly: true
+          title: Модель управляемого моста
+        steer_axle_serial:
+          type: string
+          readOnly: true
+          title: Зав. № управляемого моста
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
